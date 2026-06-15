@@ -93,6 +93,7 @@ async def run_agent(
                 field_name=field_name,
                 search_terms=search_terms,
             )
+            await asyncio.sleep(1.5) # Artificial delay for realistic UI streaming
 
             match_rate = validation["match_rate"]
             matched = validation["matched"]

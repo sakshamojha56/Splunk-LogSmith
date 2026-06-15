@@ -51,6 +51,20 @@ def _generate(prompt: str) -> Optional[str]:
 # Ordered list of (pattern_name, detection_regex, field_list)
 # Each field is (name, regex_template)
 _HEURISTIC_PATTERNS = [
+    # JSON log lines
+    (
+        "json_log",
+        re.compile(r'^\s*\{'),
+        [
+            ("timestamp",   r'"(?:timestamp|time|@timestamp|ts)":\s*"(?P<timestamp>[^"]+)"'),
+            ("level",       r'"(?:level|severity|log_level)":\s*"(?P<level>[^"]+)"'),
+            ("message",     r'"(?:message|msg|text)":\s*"(?P<message>[^"]+)"'),
+            ("host",        r'"(?:host|hostname|server)":\s*"(?P<host>[^"]+)"'),
+            ("user",        r'"(?:user|username|user_id)":\s*"(?P<user>[^"]+)"'),
+            ("src_ip",      r'"(?:ip|src_ip|client_ip|remote_addr)":\s*"(?P<src_ip>[^"]+)"'),
+            ("status",      r'"(?:status|status_code|http_status)":\s*(?P<status>\d+)'),
+        ],
+    ),
     # Apache / NGINX Combined Access Log
     (
         "apache_access",
@@ -107,20 +121,6 @@ _HEURISTIC_PATTERNS = [
             ("message",     r'(?:Message|Description)[=:\s]+(?P<message>[^\r\n]+)'),
         ],
     ),
-    # JSON log lines
-    (
-        "json_log",
-        re.compile(r'^\s*\{'),
-        [
-            ("timestamp",   r'"(?:timestamp|time|@timestamp|ts)":\s*"(?P<timestamp>[^"]+)"'),
-            ("level",       r'"(?:level|severity|log_level)":\s*"(?P<level>[^"]+)"'),
-            ("message",     r'"(?:message|msg|text)":\s*"(?P<message>[^"]+)"'),
-            ("host",        r'"(?:host|hostname|server)":\s*"(?P<host>[^"]+)"'),
-            ("user",        r'"(?:user|username|user_id)":\s*"(?P<user>[^"]+)"'),
-            ("src_ip",      r'"(?:ip|src_ip|client_ip|remote_addr)":\s*"(?P<src_ip>[^"]+)"'),
-            ("status",      r'"(?:status|status_code|http_status)":\s*(?P<status>\d+)'),
-        ],
-    ),
     # Generic fallback: key=value pairs
     (
         "key_value",
@@ -146,7 +146,7 @@ _PII_TYPE_MAP = {
 
 def _heuristic_propose(log_sample: str, real_examples: List[str]) -> List[dict]:
     """Detect log format heuristically and return field extraction proposals."""
-    sample = (real_examples[0] if real_examples else log_sample)
+    sample = log_sample # Force detection on user input for demo purposes
 
     matched_pattern = None
     for name, detector, fields in _HEURISTIC_PATTERNS:
@@ -162,8 +162,8 @@ def _heuristic_propose(log_sample: str, real_examples: List[str]) -> List[dict]:
     results = []
     for fname, fregex in fields:
         # Only include fields whose regex actually matches at least one example
-        hits = sum(1 for ex in (real_examples or [log_sample]) if re.search(fregex, ex))
-        if hits > 0 or not real_examples:
+        hits = sum(1 for ex in [log_sample] if re.search(fregex, ex))
+        if hits > 0:
             results.append({
                 "name": fname,
                 "regex": fregex,
