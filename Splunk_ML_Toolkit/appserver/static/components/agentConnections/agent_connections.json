@@ -1,0 +1,51 @@
+{
+  "mcp": {
+    "mcp_provider": {
+      "label": "Mcp provider",
+      "description": "Select the MCP provider",
+      "type": "select",
+      "name": "mcpProvider",
+      "required": true,
+      "options": [
+        { "value": "splunk", "label": "Splunk" },
+        { "value": "atlassian", "label": "Atlassian" }
+      ],
+      "fields": {
+        "splunk": [
+          { "label": "Mcp url", "name": "splunkUrl", "type": "text", "required": true },
+          { "label": "Authorization token", "name": "splunkToken", "type": "password", "required": true }
+        ],
+        "atlassian": [
+          { "label": "Mcp url", "name": "atlassianUrl", "type": "text", "required": true },
+          { "label": "Authorization token", "name": "atlassianToken", "type": "password", "required": true },
+          { "label": "Auto refresh token", "name": "atlassianAutoRefresh", "type": "checkbox", "required": false },
+          { "label": "Client id", "name": "atlassianClientId", "type": "password", "required": false, "showWhen": "atlassianAutoRefresh" },
+          { "label": "Client secret", "name": "atlassianClientSecret", "type": "password", "required": false, "showWhen": "atlassianAutoRefresh" },
+          { "label": "Refresh token", "name": "atlassianRefreshToken", "type": "password", "required": false, "showWhen": "atlassianAutoRefresh" }
+        ]
+      }
+    }
+  },
+  "kb": {
+    "kb_type": {
+      "label": "Knowledge base type",
+      "description": "Select the Knowledge Base provider",
+      "type": "select",
+      "name": "kbType",
+      "required": true,
+      "options": [
+        { "value": "aws", "label": "AWS KB" }
+      ]
+    },
+    "fields": {
+      "aws": [
+        { "label": "Region", "name": "kbRegion", "type": "text", "required": true },
+        { "label": "Knowledge base id", "name": "kbId", "type": "text", "required": true },
+        { "label": "Knowledge base id description", "name": "kbDescription", "type": "text", "required": true },
+        { "label": "Aws access key", "name": "kbAccessKey", "type": "password", "required": true },
+        { "label": "Aws secret key", "name": "kbSecretKey", "type": "password", "required": true },
+        { "label": "Role arn", "name": "kbRoleArn", "type": "password", "required": true }
+      ]
+    }
+  }
+}

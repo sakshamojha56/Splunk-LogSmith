@@ -1,0 +1,22 @@
+<nav search_view="search" color="#CF5300">
+  <view name="contents" default="true"/>
+  <view name="experiments"/>
+  <collection label="Models">
+    <view name="models"/>
+    <view name="settings"/>
+  </collection>
+  <collection label="Agents">
+    <view name="agents"/>
+    <view name="agent_run_history"/>
+  </collection>
+  <collection label="Connections">
+    <view name="connections"/>
+    <view name="containermanagement"/>
+  </collection>
+  <view name="search"/>
+  <view name="alerts"/>
+  <collection label="Support">
+    <a href="https://help.splunk.com/en/?resourceId=MLApp_User_AboutMLTK" target="_blank">Docs</a>
+    <a href="http://tiny.cc/splunkmlvideos" target="_blank">Video Tutorials</a>
+  </collection>
+</nav>

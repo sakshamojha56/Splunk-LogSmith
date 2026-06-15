@@ -1,0 +1,22 @@
+/* Prediction results table + footer: PredictExperimentsDatasetPreviewTable.css */
+
+#confusionMatrixPanel thead th {
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+
+}
+#confusionMatrixPanel tbody td.string,
+#confusionMatrixPanel thead th:first-child
+{
+    border-right: 1px solid #000;
+}
+
+/* Footer sits at bottom of flex column; auto margin preserves space above buttons after the table */
+#confusionMatrixPanel .mlts-panel-footer {
+    margin-top: auto;
+    padding-top: 10px;
+}
+
+#trainingSetFractionSliderValue {
+    font-weight: bold;
+}

@@ -1,0 +1,84 @@
+/*
+ * These styles fix and override the styles from swc web_v2
+ */
+
+/* Prevent bootstrap-enterprise.css from overriding Splunk React UI Text inputs */
+input[role='textbox'] {
+    all: unset !important;
+    width: 100% !important;
+    font: inherit !important;
+    color: inherit !important;
+    cursor: inherit !important;
+}
+
+/* Prevent bootstrap-enterprise.css from overriding Splunk React UI Number inputs */
+input[role='spinbutton'] {
+    all: unset !important;
+    width: 100% !important;
+    font: inherit !important;
+    color: inherit !important;
+    cursor: inherit !important;
+}
+input[role='combobox'] {
+    all: unset !important;
+    width: 100% !important;
+    font: inherit !important;
+    color: inherit !important;
+    cursor: inherit !important;
+}
+input[role='searchbox'] {
+    all: unset !important;
+    width: 100% !important;
+    font: inherit !important;
+    color: inherit !important;
+    cursor: inherit !important;
+}
+
+
+
+ /* Fix the alerts indentation */
+.alerts {
+    padding: initial !important;
+}
+
+/* Fix the searchbar indentation */
+.search-bar-input.shared-searchbarinput {
+    padding-bottom: initial !important;
+    margin-left: initial !important;
+}
+
+/* Fix the Alerts & Reports (Classic -> Scheduled Training) page indentation */
+.table-caption-inner {
+    padding: initial !important;
+}
+
+/* Remove gray background from Multiselect options - uses inherit for theme compatibility */
+[data-test="option"],
+[data-test="select-all"],
+[role="listbox"] > div,
+[role="listbox"] [role="option"],
+[role="listbox"] [role="menuitemcheckbox"] {
+    background-color: inherit !important;
+}
+
+[data-test="option"]:hover,
+[role="listbox"] [role="option"]:hover,
+[role="listbox"] [role="menuitemcheckbox"]:hover {
+    background-color: var(--splunk-color-background-hover, rgba(128, 128, 128, 0.1)) !important;
+}
+
+/* Remove blue focus border from action menu buttons */
+[data-test="button"]:focus,
+[data-test="toggle"]:focus,
+button[aria-haspopup="true"]:focus,
+[role="button"]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Vertical three-dot menu button hover styles */
+[data-test="toggle"],
+button[aria-haspopup="true"],
+[data-test="button"][aria-haspopup="menu"] {
+    cursor: pointer !important;
+}

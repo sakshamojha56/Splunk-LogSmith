@@ -1,0 +1,19 @@
+.mltk-anomaly-plot {
+    height: 100%;
+}
+
+.mltk-anomaly-plot-message {
+    display: none;
+}
+
+.mltk-anomaly-plot-chart {
+    height: 100%;
+}
+
+.mltk-anomaly-plot.has-top-message .mltk-anomaly-plot-message {
+    display: block;
+}
+
+.mltk-anomaly-plot.has-top-message .mltk-anomaly-plot-chart {
+    height: calc(100% - 56px);
+}

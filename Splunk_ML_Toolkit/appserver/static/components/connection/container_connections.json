@@ -1,0 +1,484 @@
+{
+  "kubernetes": {
+    "auth_mode": {
+      "label": "Logon Type",
+      "description": "Select the authentication mode to connect to Kubernetes",
+      "type": "select",
+      "name": "auth_mode",
+      "options": [
+        {
+          "value": "cert-key",
+          "label": "CERT KEY"
+        },
+        {
+          "value": "user-token",
+          "label": "USER TOKEN"
+        },
+        {
+          "value": "user-login",
+          "label": "USER LOGIN"
+        },
+        {
+          "value": "aws-iam",
+          "label": "AWS IAM"
+        },
+        {
+          "value": "service-account",
+          "label": "SERVICE ACCOUNT"
+        }
+      ],
+      "fields": {
+        "cert-key": [
+          {
+            "label": "Client Certificate",
+            "name": "client_cert",
+            "type": "password",
+            "description": "Provide the client certificate for authentication",
+            "required": true
+          },
+          {
+            "label": "Client Key",
+            "name": "client_key",
+            "type": "password",
+            "description": "Provide the client private key",
+            "required": true
+          },
+          {
+            "label": "Certificate Authority",
+            "name": "cluster_ca",
+            "type": "password",
+            "description": "Cluster Certificate Authority file",
+            "required": true
+          },
+          {
+            "label": "Cluster Base URL",
+            "name": "cluster_url",
+            "type": "text",
+            "description": "Base URL of the Kubernetes cluster",
+            "required": true
+          }
+        ],
+        "user-token": [
+          {
+            "label": "Cluster Base URL",
+            "name": "cluster_url",
+            "type": "text",
+            "description": "Base URL of the Kubernetes cluster",
+            "required": true
+          },
+          {
+            "label": "User Token",
+            "name": "user_token",
+            "type": "password",
+            "description": "Token to authenticate with the cluster",
+            "required": true
+          }
+        ],
+        "user-login": [
+          {
+            "label": "Cluster Base URL",
+            "name": "cluster_url",
+            "type": "text",
+            "description": "Base URL of the Kubernetes cluster",
+            "required": true
+          },
+          {
+            "label": "Cluster Certificate Authority",
+            "name": "cluster_ca",
+            "type": "password",
+            "description": "Cluster CA certificate file",
+            "required": true
+          },
+          {
+            "label": "User Name",
+            "name": "user_name",
+            "type": "text",
+            "description": "Kubernetes username",
+            "required": true
+          },
+          {
+            "label": "User Password",
+            "name": "user_password",
+            "type": "password",
+            "description": "Password for Kubernetes user",
+            "required": true
+          }
+        ],
+        "aws-iam": [
+          {
+            "label": "EKS Cluster Name",
+            "name": "aws_cluster_name",
+            "type": "text",
+            "description": "Name of your EKS cluster",
+            "required": true
+          },
+          {
+            "label": "AWS Access Key ID",
+            "name": "aws_access_key_id",
+            "type": "password",
+            "description": "AWS IAM access key",
+            "required": true
+          },
+          {
+            "label": "AWS Secret Access Key",
+            "name": "aws_secret_access_key",
+            "type": "password",
+            "description": "AWS IAM secret key",
+            "required": true
+          },
+          {
+            "label": "AWS Region Name",
+            "name": "aws_region_name",
+            "type": "text",
+            "description": "AWS region where the cluster is hosted",
+            "required": true
+          },
+          {
+            "label": "AWS Certificate",
+            "name": "aws_certificate_arn",
+            "type": "text",
+            "description": "AWS certificate where the cluster is hosted",
+            "required": false
+          }
+        ],
+        "service-account": [
+          {
+            "label": "Cluster Base URL",
+            "name": "cluster_url",
+            "type": "text",
+            "description": "Base URL of the Kubernetes cluster",
+            "required": true
+          },
+          {
+            "label": "Service Account Token",
+            "name": "service_account_token",
+            "type": "password",
+            "description": "Kubernetes service account token",
+            "required": true
+          }
+        ]
+      }
+    },
+    "service_type": {
+      "label": "Service Type",
+      "description": "Select the service type to deploy workloads",
+      "type": "select",
+      "name": "service_type",
+      "options": [
+        {
+          "value": "load_balancer",
+          "label": "LOAD BALANCER"
+        },
+        {
+          "value": "node_port",
+          "label": "NODE PORT"
+        },
+        {
+          "value": "route",
+          "label": "ROUTE"
+        },
+        {
+          "value": "ingress",
+          "label": "INGRESS"
+        }
+      ],
+      "common": [
+        {
+          "label": "Namespace",
+          "name": "namespace",
+          "type": "text",
+          "description": "Namespace for deployment",
+          "required": true
+        },
+        {
+          "label": "Storage Class",
+          "name": "storage_class",
+          "type": "text",
+          "description": "Storage class for PV",
+          "required": true
+        },
+        {
+          "label": "Image Pull Secrets",
+          "name": "image_pull_secrets",
+          "type": "text",
+          "description": "Secrets for private images",
+          "required": true
+        },
+        {
+          "label": "Cluster Mode",
+          "name": "in_cluster_mode",
+          "type": "select",
+          "description": "Select if Splunk is running inside the Kubernetes cluster",
+          "options": [
+            {
+              "value": "yes",
+              "label": "Yes"
+            },
+            {
+              "value": "no",
+              "label": "No"
+            }
+          ],
+          "required": true
+        },
+        {
+          "label": "Certificate Filename or Path",
+          "name": "endpoint_cert_filename_or_path",
+          "type": "URL",
+          "description": "Path to the certificate file",
+          "required": false
+        },
+        {
+          "label": "Enable Container Certificates",
+          "name": "container_enable_https",
+          "type": "select",
+          "description": "Enable or disable container certificates",
+          "options": [
+            {
+              "value": "true",
+              "label": "True"
+            },
+            {
+              "value": "false",
+              "label": "False"
+            }
+          ],
+          "required": false
+        },
+        {
+          "label": "Jupyter Password",
+          "name": "jupyter_password",
+          "type": "password",
+          "description": "Password for Jupyter",
+          "default": "Splunk4DeepLearning",
+          "required": false
+        },
+        {
+          "label": "Check HostName",
+          "name": "endpoint_cert_check_hostname",
+          "description": "HostName checking",
+          "type": "select",
+          "options": [
+            {
+              "value": "true",
+              "label": "True"
+            },
+            {
+              "value": "false",
+              "label": "False"
+            }
+          ],
+          "required": false
+        },
+        {
+          "label": "Min CPU",
+          "name": "min_cpu",
+          "type": "text",
+          "description": "Minimum CPU allocation (in milliCPU)",
+          "default": "250m",
+          "required": true
+        },
+        {
+          "label": "Max CPU",
+          "name": "max_cpu",
+          "type": "text",
+          "description": "Maximum CPU allocation (in milliCPU)",
+          "default": "800m",
+          "required": true
+        },
+        {
+          "label": "Min Memory",
+          "name": "min_memory",
+          "type": "memory",
+          "description": "Minimum memory allocation (e.g. 512Mi, 1Gi)",
+          "default": "512Mi",
+          "required": true
+        },
+        {
+          "label": "Max Memory",
+          "name": "max_memory",
+          "type": "memory",
+          "description": "Maximum memory allocation (e.g. 3Gi)",
+          "default": "3Gi",
+          "required": true
+        }
+      ],
+      "node_port": [
+        {
+          "label": "Node Port Internal Hostname",
+          "name": "node_port_hostname_internal",
+          "type": "text",
+          "description": "Internal hostname for NodePort",
+          "required": true
+        },
+        {
+          "label": "Node Port External Hostname",
+          "name": "node_port_hostname_external",
+          "type": "text",
+          "description": "External hostname for NodePort",
+          "required": true
+        }
+      ],
+      "ingress": [
+        {
+          "label": "Ingress Host Pattern",
+          "name": "ingress_host_pattern",
+          "type": "text",
+          "description": "Pattern used for ingress routing",
+          "required": true
+        },
+        {
+          "label": "Ingress Annotations",
+          "name": "ingress_annotations",
+          "type": "text",
+          "description": "Additional ingress annotations",
+          "required": true
+        }
+      ]
+    },
+    "hpa_enabled": {
+      "label": "HPA Enabled",
+      "description": "Enable Horizontal Pod Autoscaler for workloads",
+      "type": "checkbox",
+      "name": "hpa_enabled",
+      "fields": [
+        {
+          "label": "Min Replicas",
+          "name": "min_replicas",
+          "type": "int",
+          "description": "Minimum number of replicas",
+          "required": true
+        },
+        {
+          "label": "Max Replicas",
+          "name": "max_replicas",
+          "type": "int",
+          "description": "Maximum number of replicas",
+          "required": true
+        },
+        {
+          "label": "CPU Threshold Percent",
+          "name": "cpu_threshold_percent",
+          "type": "text",
+          "description": "CPU threshold percentage",
+          "required": true
+        },
+        {
+          "label": "Min CPU",
+          "name": "min_cpu",
+          "type": "text",
+          "default": "250m",
+          "description": "Input in milliCPU, e.g., 250m",
+          "required": true
+        },
+        {
+          "label": "Max CPU",
+          "name": "max_cpu",
+          "type": "text",
+          "default": "800m",
+          "description": "Input in milliCPU, e.g., 500m",
+          "required": true
+        },
+        {
+          "label": "Min Memory",
+          "name": "min_memory",
+          "type": "memory",
+          "default": "512Mi",
+          "description": "Minimum memory allocation",
+          "required": true
+        },
+        {
+          "label": "Max Memory",
+          "name": "max_memory",
+          "type": "memory",
+          "default": "3Gi",
+          "description": "Maximum memory allocation",
+          "required": true
+        }
+      ]
+    }
+  },
+  "docker": {
+    "docker_url": {
+      "label": "Docker Host",
+      "description": "URL of your Docker registry",
+      "type": "URL",
+      "required": true
+    },
+    "endpoint_hostname": {
+      "label": "Endpoint Hostname",
+      "description": "Internal hostname for Docker endpoint",
+      "type": "text",
+      "required": true
+    },
+    "endpoint_hostname_external": {
+      "label": "Endpoint Hostname External",
+      "description": "External hostname for Docker endpoint",
+      "type": "text",
+      "required": true
+    },
+    "docker_network": {
+      "label": "Docker Network",
+      "description": "Docker network name",
+      "type": "text",
+      "required": false
+    },
+    "docker_logging_endpoint_hostname": {
+      "label": "Splunk Docker Logging Endpoint",
+      "description": "Hostname for logging endpoint",
+      "type": "text",
+      "required": false
+    },
+    "docker_logging_splunk_token": {
+      "label": "Splunk Docker Logging (HEC) Token",
+      "description": "Token for Splunk logging",
+      "type": "text",
+      "required": false
+    },
+    "container_enable_https": {
+      "label": "Enable Container Certificates",
+      "description": "Enable HTTPS for container communication",
+      "type": "select",
+      "options": [
+        {
+          "value": "true",
+          "label": "True"
+        },
+        {
+          "value": "false",
+          "label": "False"
+        }
+      ],
+      "required": false
+    },
+    "endpoint_cert_check_hostname": {
+      "label": "Check HostName",
+      "description": "Hostname for SSL certificate validation",
+      "type": "select",
+      "options": [
+        {
+          "value": "true",
+          "label": "True"
+        },
+        {
+          "value": "false",
+          "label": "False"
+        }
+      ],
+      "required": false
+    },
+    "endpoint_cert_filename_or_path": {
+      "label": "Certificate Filename or Path",
+      "description": "Path to the certificate file",
+      "type": "URL",
+      "required": false
+    },
+    "jupyter_password": {
+      "label": "Jupyter Password",
+      "description": "Password for Jupyter",
+      "type": "password",
+      "default": "Splunk4DeepLearning",
+      "required": false
+    }
+  }
+}

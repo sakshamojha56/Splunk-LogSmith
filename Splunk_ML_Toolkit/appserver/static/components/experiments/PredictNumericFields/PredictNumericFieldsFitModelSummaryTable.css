@@ -1,0 +1,184 @@
+/**
+ * PNF results summary row — regression metrics + Fit Model table (Splunk dashboard style).
+ */
+
+.mltk-pnf-summary-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 16px;
+    align-items: stretch;
+    border: 1px solid #c3cbd4;
+    border-radius: 2px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.mltk-pnf-summary-pair.mltk-pnf-summary-pair--single {
+    grid-template-columns: 1fr;
+}
+
+@media (max-width: 900px) {
+    .mltk-pnf-summary-pair:not(.mltk-pnf-summary-pair--single) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.mltk-pnf-summary-metrics-pane {
+    padding: 12px 14px 10px;
+    border-right: 1px solid #c3cbd4;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.mltk-pnf-summary-pair--single .mltk-pnf-summary-metrics-pane,
+.mltk-pnf-summary-pair .mltk-pnf-summary-metrics-pane:last-child {
+    border-right: none;
+}
+
+@media (max-width: 900px) {
+    .mltk-pnf-summary-metrics-pane {
+        border-right: none;
+        border-bottom: 1px solid #c3cbd4;
+    }
+
+    .mltk-pnf-summary-table-pane:last-child {
+        border-bottom: none;
+    }
+}
+
+.mltk-pnf-summary-metrics-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px 28px;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+    padding: 4px 0 8px;
+}
+
+.mltk-pnf-stat-metric {
+    flex: 1 1 140px;
+    min-width: 120px;
+    max-width: 100%;
+    text-align: center;
+}
+
+.mltk-pnf-stat-drilldown-title {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px 4px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #006d9c;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: 'Splunk Platform Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.mltk-pnf-stat-drilldown-title:hover {
+    text-decoration: underline;
+}
+
+.mltk-pnf-stat-metric-value {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 40px;
+}
+
+.mltk-pnf-stat-metric-value .single-result {
+    font-size: 26px;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.2;
+}
+
+.mltk-pnf-summary-pane-footer {
+    margin-top: auto;
+    padding-top: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.mltk-pnf-summary-pane-footer > a:not(:first-child) {
+    margin-left: 8px;
+}
+
+.mltk-pnf-summary-pane-footer a {
+    cursor: pointer;
+}
+
+.mltk-pnf-summary-table-pane {
+    padding: 10px 12px 10px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.mltk-pnf-summary-table-pane .mlts-panel-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #006d9c;
+}
+
+/* Fit Model Parameters Summary — SearchResultsTable */
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table {
+    table-layout: auto;
+    width: 100%;
+}
+
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead {
+    background: #f2f4f5;
+}
+
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th,
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th button,
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th span,
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th div,
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th a,
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th [role='columnheader'] {
+    font-family: 'Splunk Platform Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+    max-width: none;
+    text-decoration: none !important;
+}
+
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th button:hover,
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th button:focus,
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th a:hover,
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table thead th a:focus {
+    text-decoration: none !important;
+}
+
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table tbody td {
+    font-family: 'Splunk Platform Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 400;
+    color: #333;
+    white-space: nowrap;
+}
+
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host table tbody td:first-child {
+    color: #006d9c;
+}
+
+/* Pagination sits as second flex child inside SearchResultsTable wrapper */
+#fitModelSummaryPanel .mltk-fit-model-summary-table-host > div > div:nth-child(2) {
+    display: flex;
+    justify-content: flex-end;
+}

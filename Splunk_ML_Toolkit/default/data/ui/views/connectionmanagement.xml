@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<view template="Splunk_ML_Toolkit:/templates/base.html" type="html">
+    <label>Connection Management</label>
+</view>
+

@@ -1,0 +1,6 @@
+<nav search_view="search">
+  <view name="dashboard" default='true' />
+  <view name="tools" />
+  <view name="monitoring" /> <!-- maps to monitoring.xml in data/ui/views -->
+  <!-- <view name="tool_settings" /> --> 
+</nav>

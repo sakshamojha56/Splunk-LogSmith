@@ -1,0 +1,88 @@
+[
+    {
+        "description": "This example uses the Predict Numeric Fields Assistant and the Linear Regression algorithm to predict remote access to the VPN from four other fields.",
+        "featured": true,
+        "industries": [
+            "security"
+        ],
+        "name": "App Usage",
+        "assistant": "predict_numeric_fields",
+        "title": "Predict VPN Usage"
+    },
+    {
+        "description": "This example uses the Predict Categorical Fields Assistant and the Logistic Regression algorithm to predict malware from fields including bytes received, bytes sent, and destination port.",
+        "featured": true,
+        "industries": [
+            "security"
+        ],
+        "name": "Malware",
+        "assistant": "predict_categorical_fields",
+        "title": "Predict the Presence of Malware"
+    },
+    {
+        "description": "This example uses the Detect Numeric Outliers Assistant and threshold method of Median Absolute Deviation to look for outliers in login information.",
+        "featured": true,
+        "industries": [
+            "security"
+        ],
+        "name": "Employee Logins (prediction errors)",
+        "assistant": "detect_numeric_outliers",
+        "title": "Detect Outliers in Number of Logins (vs. Predicted Value)"
+    },
+    {
+        "description": "This example uses the Detect Categorical Outliers Assistant on three fields of data that include user and value.",
+        "featured": true,
+        "industries": [
+            "security"
+        ],
+        "name": "Bitcoin Transactions",
+        "assistant": "detect_categorical_outliers",
+        "title": "Detect Outliers in Bitcoin Transactions"
+    },
+    {
+        "description": "This example uses the Forecast Time Series Assistant and the Kalman Filter algorithm to forecast future employee login numbers.",
+        "featured": false,
+        "industries": [
+            "security"
+        ],
+        "name": "Employee Logins",
+        "assistant": "forecast_time_series",
+        "title": "Forecast the Number of Employee Logins"
+    },
+    {
+        "description": "This example uses the Cluster Numeric Events Assistant, a preprocessing step using the Standard Scaler method, and the Spectral Clustering algorithm to cluster on four different fields.",
+        "featured": true,
+        "industries": [
+            "security"
+        ],
+        "name": "Apps",
+        "assistant": "cluster_numeric_events",
+        "title": "Cluster Behavior by App Usage"
+    },
+    {
+        "description": "This example uses the Smart Prediction Assistant and the AutoPrediction algorithm to predict vulnerabilities in firewall data from fields in the data including bytes received, bytes sent, packets received, and packets sent.",
+        "featured": true,
+        "industries": ["security"],
+        "name": "Firewall Traffic",
+        "assistant": "smart_prediction",
+        "title": "Predict the Presence of Vulnerabilities"
+    },
+    {
+        "description": "This example uses the AI command to detect anomalies in time series metrics, in this case counts of log events in the internal Splunk index.",
+        "featured": true,
+        "industries": ["security"],
+        "name": "search?q=%7C%20tstats%20count%20WHERE%20index%3D_internal%20BY%20_time%20span%3D5m%20%7C%20stats%20list(count)%20as%20counts%20%7C%20ai%20prompt%3D%22please%20help%20me%20identify%20outliers%20in%20these%20numeric%20values%2C%20explaining%20your%20logic%20and%20any%20calculations%20performed%3A%20%7Bcounts%7D%22",
+        "assistant": "ai_commander",
+        "title": "Anomaly Detection"
+    },
+    {
+        "description": "This example uses CDTSM (Cisco Deep Time Series Model) to detect anomalies in time series data using the IQR method with threshold intervals.",
+        "featured": true,
+        "industries": [
+            "security"
+        ],
+        "name": "search?q=%7C%20makeresults%20count%3D600%0A%7C%20streamstats%20count%20as%20i%0A%7C%20eval%20_time%20%3D%20now%28%29%20-%20%28600%20-%20i%29%20%2A%20300%0A%7C%20eval%20cpu%20%3D%20round%28random%28%29%20%25%20100%2C%202%29%0A%7C%20eval%20disk%20%3D%20round%28random%28%29%20%25%20100%2C%202%29%0A%7C%20fields%20_time%20cpu%20disk%20%7C%20apply%20CDTSM%20cpu%20mode%3Danomaly%20conf_interval%3D%2290%22%20detection_window_earliest%3D-3h%20detection_window_latest%3D-2h%20method%3Diqr_residual%20multiplier%3D0.5%20show_input%3Dt&display.page.search.tab=visualizations&display.general.type=visualizations&display.visualizations.type=custom&display.visualizations.custom.type=Splunk_ML_Toolkit.AnomalyViz",
+        "assistant": "cdtsm",
+        "title": "Anomaly Detection"
+    }
+]

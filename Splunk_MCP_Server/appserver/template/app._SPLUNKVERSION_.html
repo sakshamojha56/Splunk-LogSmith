@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Webpack App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="shortcut icon" href="${make_url('/static/img/favicon.ico', appendcachebust=true)}" />
+  </head>
+  <body>
+    <script src="${make_url('/config?autoload=1', appendcachebust=true)}" crossorigin="use-credentials" ></script>
+    <script src="${make_url('/static/js/i18n.js', appendcachebust=true)}"></script>
+    <script src="${make_url('/i18ncatalog?autoload=1', appendcachebust=true)}"></script>
+    <script>
+      __splunkd_partials__ = ${json_decode(splunkd)};
+    </script>
+
+    <script src="${make_url('/static/app/Splunk_MCP_Server/js/runtime.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script><script src="${make_url('/static/app/Splunk_MCP_Server/js/vendors-node_modules_dnd-kit_modifiers_dist_modifiers_esm_js-node_modules_dnd-kit_sortable_di-697530.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script><script src="${make_url('/static/app/Splunk_MCP_Server/js/vendors-node_modules_lodash_castArray_js-node_modules_lodash_clamp_js-node_modules_lodash_def-a712f9.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script><script src="${make_url('/static/app/Splunk_MCP_Server/js/vendors-node_modules_querystring_index_js-node_modules_react-event-listener_dist_react-event--5af422.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script><script src="${make_url('/static/app/Splunk_MCP_Server/js/vendors-node_modules_splunk_react-icons_enterprise_InfoCircle_js-node_modules_splunk_react-pa-8a48c3.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script><script src="${make_url('/static/app/Splunk_MCP_Server/js/vendors-node_modules_use-typed-event-listener_dist_index_esm_js-node_modules_warning_warning_-a93a33.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script><script src="${make_url('/static/app/Splunk_MCP_Server/js/vendors-node_modules_splunk_react-icons_Pencil_js-node_modules_splunk_react-ui_Message_js-nod-9c1a0f.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script><script src="${make_url('/static/app/Splunk_MCP_Server/js/vendors-node_modules_splunk_react-icons_SquaresLayered_js-node_modules_splunk_react-ui_JSONTree_js.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script><script src="${make_url('/static/app/Splunk_MCP_Server/js/src_MCPConfigurationPage_Connection_styled_js-src_services_APIService_js.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script><script src="${make_url('/static/app/Splunk_MCP_Server/js/app.cea4c59b16d612bc804a.js', appendcachebust=true)}"></script>
+  </body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Splunk LogSmith</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                surface: "#ffffff",
+                border: "rgba(0, 0, 0, 0.05)",
+                brandPink: "#d81159",
+                brandOrange: "#fb8b24",
+            },
+            fontFamily: {
+                headline: ["Public Sans", "sans-serif"],
+                display: ["Public Sans", "sans-serif"],
+                body: ["Inter", "sans-serif"],
+                label: ["Public Sans", "sans-serif"],
+                mono: ["JetBrains Mono", "monospace"]
+            }
+        },
+    },
+}
+</script>
+<style>
+body {
+    background-color: #f8fafc; /* White/light background */
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    min-height: max(884px, 100dvh);
+    position: relative;
+    overflow-x: hidden;
+}
+/* Faded background gradients */
+body::before, body::after {
+    content: "";
+    position: fixed;
+    width: 120vw;
+    height: 120vh;
+    z-index: -1;
+    opacity: 0.15; /* Kept very faded */
+    pointer-events: none;
+}
+body::before {
+    top: -30%;
+    left: -20%;
+    background: radial-gradient(circle at 30% 30%, #d81159 0%, transparent 60%);
+    filter: blur(140px);
+}
+body::after {
+    bottom: -30%;
+    right: -20%;
+    background: radial-gradient(circle at 70% 70%, #fb8b24 0%, transparent 60%);
+    filter: blur(140px);
+}
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.02); }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+/* Full white and glossy glass components */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 2px 0 0 rgba(255, 255, 255, 1);
+    border-radius: 1.5rem;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 18px;
+    background: #0f172a;
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+@keyframes blink { 50% { opacity: 0; } }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Colorful Terminal Logs */
+.log-info { color: #0284c7; } /* Blue */
+.log-warn { color: #d97706; } /* Yellow */
+.log-error { color: #e11d48; } /* Red */
+.log-succ { color: #059669; } /* Green */
+.log-time { color: #7c3aed; font-weight: 500; } /* Purple */
+.log-step { font-weight: 700; }
+.log-msg { color: #334155; }
+
+/* Code Syntax Colors */
+.code-comment { color: #94a3b8; font-style: italic; }
+.code-bracket { color: #d81159; font-weight: bold; }
+.code-key { color: #0284c7; font-weight: 600; }
+.code-string { color: #059669; }
+.code-regex { color: #fb8b24; }
+
+</style>
+</head>
+<body class="font-body selection:bg-brandPink/20 selection:text-brandPink">
+<!-- TopAppBar -->
+<header class="bg-white/90 text-slate-800 font-headline border-b border-white backdrop-blur-xl flex justify-between items-center px-6 py-3 w-full fixed top-0 z-[100] shadow-sm">
+    <div class="flex items-center gap-4">
+        <!-- Logo -->
+        <div class="flex flex-col justify-center -mt-1">
+            <span class="font-black text-[28px] tracking-tighter text-black leading-none">splunk&gt;</span>
+            <span class="text-[9px] font-semibold text-slate-600 tracking-wide text-right pr-0.5 -mt-0.5">a <span class="font-black text-black tracking-widest">CISCO</span> company</span>
+        </div>
+        <!-- Deep Black Title -->
+        <h1 class="text-xl font-black tracking-tight text-black pl-4 border-l-2 border-slate-300 py-1 mt-1">LogSmith</h1>
+    </div>
+    <div class="hidden md:flex gap-8 mt-1">
+        <nav class="flex gap-6 items-center">
+            <span class="text-xs font-mono uppercase tracking-widest text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded flex items-center gap-2 shadow-sm">
+                MCP Server Active
+                <span class="w-2 h-2 rounded-full bg-brandPink animate-pulse"></span>
+            </span>
+        </nav>
+    </div>
+</header>
+
+<main class="pt-24 pb-24 px-6 max-w-[1600px] mx-auto grid grid-cols-12 gap-6">
+    <!-- Left Column: Input Panel -->
+    <section class="col-span-12 lg:col-span-4 space-y-6">
+        <div class="glass-panel p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    Input Configuration
+                </h2>
+                <!-- Dark Pink / Orange Button -->
+                <button onclick="loadSample()" class="text-[10px] font-bold uppercase tracking-widest text-white bg-brandPink hover:bg-pink-700 rounded-full px-4 py-1.5 shadow-md transition-all">LOAD SAMPLE</button>
+            </div>
+            <div class="space-y-4">
+                <div class="group">
+                    <label class="block text-[10px] uppercase tracking-widest text-slate-600 mb-1.5 ml-1 font-bold">Raw Log Samples</label>
+                    <textarea id="logSample" class="w-full h-48 bg-white border border-slate-200 rounded-xl p-3 font-mono text-xs text-slate-800 focus:border-brandPink focus:ring-1 focus:ring-brandPink transition-all custom-scrollbar resize-none shadow-inner" placeholder="Paste your raw logs here for automated regex parsing..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="group">
+                        <label class="block text-[10px] uppercase tracking-widest text-slate-600 mb-1.5 ml-1 font-bold">Splunk Index</label>
+                        <input id="indexInput" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-mono text-xs text-slate-800 focus:border-brandPink focus:ring-1 focus:ring-brandPink shadow-inner" type="text" value="main"/>
+                    </div>
+                    <div class="group">
+                        <label class="block text-[10px] uppercase tracking-widest text-slate-600 mb-1.5 ml-1 font-bold">Sourcetype</label>
+                        <input id="sourcetypeInput" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-mono text-xs text-slate-800 focus:border-brandPink focus:ring-1 focus:ring-brandPink shadow-inner" type="text" value="webapp_logs"/>
+                    </div>
+                    <div class="group">
+                        <label class="block text-[10px] uppercase tracking-widest text-slate-600 mb-1.5 ml-1 font-bold">TA Name</label>
+                        <input id="taNameInput" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-mono text-xs text-slate-800 focus:border-brandPink focus:ring-1 focus:ring-brandPink shadow-inner" type="text" value="TA_webapp_extracted"/>
+                    </div>
+                    <div class="group">
+                        <label class="block text-[10px] uppercase tracking-widest text-slate-600 mb-1.5 ml-1 font-bold">Search Filter</label>
+                        <input id="searchTerms" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-mono text-xs text-slate-800 focus:border-brandPink focus:ring-1 focus:ring-brandPink shadow-inner" type="text" value="*"/>
+                    </div>
+                </div>
+                <!-- Orange Button -->
+                <button id="analyzeBtn" onclick="startAnalysis()" class="w-full py-3.5 bg-brandOrange hover:bg-orange-600 text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                    Execute Architect
+                </button>
+            </div>
+        </div>
+
+        <!-- Analysis Results -->
+        <div id="fieldsPanel" class="glass-panel p-6 hidden">
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-6">
+                Field Extraction
+            </h2>
+            <div id="fieldsList" class="space-y-6 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+                <!-- Fields injected here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Right Column: Terminal & TA Preview -->
+    <section class="col-span-12 lg:col-span-8 space-y-6">
+        <!-- Live Terminal -->
+        <div class="glass-panel overflow-hidden flex flex-col p-0">
+            <div class="bg-white/80 px-4 py-2 border-b border-slate-200 flex items-center justify-between">
+                <span class="text-[10px] uppercase tracking-widest text-slate-600 font-bold">LIVE_STREAM_INSPECTOR</span>
+                <div class="flex items-center gap-3">
+                    <span id="statusDot" class="inline-block w-2 h-2 bg-slate-300 rounded-full"></span>
+                    <span id="statusText" class="text-[10px] font-mono text-slate-500 font-bold">IDLE</span>
+                </div>
+            </div>
+            <div id="activityLog" class="h-[22rem] overflow-y-auto p-4 font-mono text-[11px] leading-relaxed custom-scrollbar bg-white/60">
+                <div class="space-y-1" id="logContent">
+                    <div><span class="log-time">[SYS]</span> <span class="log-info log-step">INFO</span> <span class="log-msg">System ready. Configure inputs and execute.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bento Stats Grid -->
+        <div id="statsRow" class="grid grid-cols-1 md:grid-cols-4 gap-4 hidden">
+            <div class="glass-panel p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Fields</span>
+                <span id="statFields" class="text-4xl font-black text-brandPink mt-1">0</span>
+            </div>
+            <div class="glass-panel p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Avg Match Rate</span>
+                <span id="statAvgRate" class="text-4xl font-black text-brandOrange mt-1">0%</span>
+            </div>
+            <div class="glass-panel p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">PII Entities</span>
+                <span id="statPii" class="text-4xl font-black text-brandPink mt-1">0</span>
+            </div>
+            <div class="glass-panel p-5 flex flex-col items-center justify-center text-center">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Cycles</span>
+                <span id="statIter" class="text-4xl font-black text-brandOrange mt-1">0</span>
+            </div>
+        </div>
+
+        <!-- TA Preview / Code Snippets -->
+        <div id="taPreviewPanel" class="glass-panel overflow-hidden hidden flex-col p-0">
+            <div class="bg-white/80 px-4 py-2 border-b border-slate-200">
+                 <span class="text-[10px] uppercase tracking-widest text-slate-600 font-bold">Code Conf</span>
+            </div>
+            <div class="flex border-b border-slate-200 overflow-x-auto custom-scrollbar bg-white/60">
+                <button class="tab-btn px-6 py-3 text-brandPink border-b-2 border-brandPink bg-white/80 font-mono text-xs font-bold whitespace-nowrap" onclick="switchTab('props', this)">props.conf</button>
+                <button class="tab-btn px-6 py-3 text-slate-500 hover:text-brandPink transition-colors font-mono text-xs font-semibold whitespace-nowrap" onclick="switchTab('transforms', this)">transforms.conf</button>
+                <button class="tab-btn px-6 py-3 text-slate-500 hover:text-brandPink transition-colors font-mono text-xs font-semibold whitespace-nowrap" onclick="switchTab('datamodel', this)">Data Model</button>
+                <div class="ml-auto flex items-center pr-4 pl-4">
+                    <button id="downloadBtn" onclick="downloadTA()" class="text-white bg-brandPink hover:bg-pink-700 transition-colors flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm">
+                        Download
+                    </button>
+                </div>
+            </div>
+            <div class="p-6 bg-white/50 min-h-[300px]">
+                <div id="tab-props" class="tab-content active"><pre id="propsConf" class="font-mono text-xs leading-relaxed custom-scrollbar overflow-x-auto"></pre></div>
+                <div id="tab-transforms" class="tab-content"><pre id="transformsConf" class="font-mono text-xs leading-relaxed custom-scrollbar overflow-x-auto"></pre></div>
+                <div id="tab-datamodel" class="tab-content"><pre id="dataModelJson" class="font-mono text-xs leading-relaxed custom-scrollbar overflow-x-auto"></pre></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const API = 'http://localhost:8080';
+    let currentJobId = null;
+    let pollInterval = null;
+
+    const SAMPLE_LOG = `2024-01-15T14:23:01.123Z ERROR app-server-01 user=john.doe@company.com ip=192.168.1.105 method=POST url=/api/v1/payments status=500 duration=2341ms msg="Payment gateway timeout"`;
+
+    function loadSample() { document.getElementById('logSample').value = SAMPLE_LOG; }
+
+    // Simple syntax highlighter for conf files and json
+    function highlightSyntax(code, isJson = false) {
+        if (!code) return '';
+        let escaped = escapeHtml(code);
+        if (isJson) {
+            escaped = escaped.replace(/(".*?":)/g, '<span class="code-key">$1</span>');
+            escaped = escaped.replace(/(: \s*)(".*?")/g, '$1<span class="code-string">$2</span>');
+            escaped = escaped.replace(/(: \s*)(true|false|null|\d+)/g, '$1<span class="code-regex">$2</span>');
+            escaped = escaped.replace(/([\{\}\[\]])/g, '<span class="code-bracket">$1</span>');
+        } else {
+            // .conf files
+            escaped = escaped.replace(/^(#.*)$/gm, '<span class="code-comment">$1</span>');
+            escaped = escaped.replace(/^(\[.*\])$/gm, '<span class="code-bracket">$1</span>');
+            escaped = escaped.replace(/^([A-Za-z0-9_-]+)(?=\s*=)/gm, '<span class="code-key">$1</span>');
+            escaped = escaped.replace(/\(\?&lt;.*?&gt;.*?\)(?=\s|$)/g, '<span class="code-regex">$&</span>');
+        }
+        return escaped;
+    }
+
+    function logLine(step, msg, type = 'INFO') {
+        const logContent = document.getElementById('logContent');
+        const logContainer = document.getElementById('activityLog');
+        const now = new Date().toISOString().split('T')[1].slice(0, 12);
+        
+        let stepClass = "log-info";
+        if (type === 'ERROR') stepClass = "log-error";
+        if (type === 'WARN') stepClass = "log-warn";
+        if (type === 'DONE' || type === 'SUCC') stepClass = "log-succ";
+
+        // Highlight fields in brackets like [timestamp] inside the msg
+        const highlightedMsg = msg.replace(/(\[.*?\])/g, '<span class="code-bracket">$1</span>');
+
+        const div = document.createElement('div');
+        div.innerHTML = `<span class="log-time">[${now}]</span> <span class="log-step ${stepClass}">${step}</span> <span class="log-msg">${highlightedMsg}</span>`;
+        logContent.appendChild(div);
+        
+        // Auto scroll
+        logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    function setStatus(statusText, isRunning = false, isError = false) {
+        document.getElementById('statusText').textContent = statusText;
+        const dot = document.getElementById('statusDot');
+        if (isRunning) {
+            dot.className = "inline-block w-2 h-2 bg-brandOrange rounded-full animate-pulse";
+            document.getElementById('statusText').className = "text-[10px] font-mono text-brandOrange font-bold animate-pulse";
+        } else if (isError) {
+            dot.className = "inline-block w-2 h-2 bg-red-500 rounded-full";
+            document.getElementById('statusText').className = "text-[10px] font-mono text-red-600 font-bold";
+        } else {
+            dot.className = "inline-block w-2 h-2 bg-green-500 rounded-full";
+            document.getElementById('statusText').className = "text-[10px] font-mono text-green-600 font-bold";
+        }
+    }
+
+    async function startAnalysis() {
+        const logSample = document.getElementById('logSample').value.trim();
+        if (!logSample) { alert('Please paste a log sample first.'); return; }
+
+        document.getElementById('analyzeBtn').disabled = true;
+        document.getElementById('analyzeBtn').innerHTML = 'PROCESSING...';
+        document.getElementById('logContent').innerHTML = '';
+        
+        document.getElementById('fieldsPanel').classList.add('hidden');
+        document.getElementById('statsRow').classList.add('hidden');
+        document.getElementById('taPreviewPanel').classList.add('hidden');
+
+        logLine('START', 'Initializing Architect...');
+        setStatus('BUFFERING...', true);
+
+        const payload = {
+            log_sample: logSample,
+            index: document.getElementById('indexInput').value || 'main',
+            sourcetype: document.getElementById('sourcetypeInput').value || 'custom_logs',
+            ta_name: document.getElementById('taNameInput').value || 'TA_auto_extracted',
+            search_terms: document.getElementById('searchTerms').value || '*',
+        };
+
+        try {
+            const resp = await fetch(`${API}/analyze`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const data = await resp.json();
+            currentJobId = data.job_id;
+            logLine('AGENT', `Job session created: ${currentJobId.slice(0,8)}...`);
+            pollJob();
+        } catch (e) {
+            logLine('ERROR', `Connection refused: ${e.message}`, 'ERROR');
+            setStatus('SYSTEM ERROR', false, true);
+            document.getElementById('analyzeBtn').disabled = false;
+            document.getElementById('analyzeBtn').innerHTML = 'EXECUTE ARCHITECT';
+        }
+    }
+
+    function pollJob() {
+        let lastProgressLen = 0;
+        pollInterval = setInterval(async () => {
+            try {
+                const resp = await fetch(`${API}/jobs/${currentJobId}`);
+                const job = await resp.json();
+
+                const progress = job.progress || [];
+                for (let i = lastProgressLen; i < progress.length; i++) {
+                    const p = progress[i];
+                    const step = p.step?.toUpperCase() || 'INFO';
+                    let msg = p.message || '';
+                    if (p.field && p.match_rate !== undefined) {
+                        msg = `Validated [${p.field}] → ${(p.match_rate*100).toFixed(1)}% match`;
+                    } else if (p.field && p.iteration) {
+                        msg = `Refining regex for [${p.field}] (Cycle ${p.iteration})`;
+                    } else if (p.count) {
+                        msg = `Indexed ${p.count} historical events via MCP`;
+                    } else if (p.fields) {
+                        msg = `Proposed fields: ${Array.isArray(p.fields) ? p.fields.join(', ') : JSON.stringify(p.fields)}`;
+                    }
+                    const type = step === 'DONE' ? 'SUCC' : step === 'ERROR' ? 'ERROR' : step === 'WARN' ? 'WARN' : 'INFO';
+                    if (msg) logLine(step, msg, type);
+                }
+                lastProgressLen = progress.length;
+
+                if (job.status === 'done') {
+                    clearInterval(pollInterval);
+                    onAnalysisDone(job);
+                } else if (job.status === 'error') {
+                    clearInterval(pollInterval);
+                    logLine('ERROR', job.error || 'Pipeline failure', 'ERROR');
+                    setStatus('FAILED', false, true);
+                    document.getElementById('analyzeBtn').disabled = false;
+                    document.getElementById('analyzeBtn').innerHTML = 'EXECUTE ARCHITECT';
+                }
+            } catch(e) {}
+        }, 1000);
+    }
+
+    function onAnalysisDone(job) {
+        logLine('DONE', `Pipeline completed successfully. Extracted ${job.fields.length} fields.`, 'SUCC');
+        setStatus('COMPLETE', false, false);
+        document.getElementById('analyzeBtn').disabled = false;
+        document.getElementById('analyzeBtn').innerHTML = 'EXECUTE ARCHITECT';
+        
+        document.getElementById('fieldsPanel').classList.remove('hidden');
+        document.getElementById('statsRow').classList.remove('hidden');
+        document.getElementById('taPreviewPanel').classList.remove('hidden');
+        document.getElementById('statsRow').classList.add('grid');
+        document.getElementById('taPreviewPanel').classList.add('flex');
+        
+        renderFields(job.fields);
+        renderTA(job.ta_preview);
+    }
+
+    function renderFields(fields) {
+        const list = document.getElementById('fieldsList');
+        list.innerHTML = '';
+
+        const piiCount = fields.filter(f => f.is_pii).length;
+        const avgRate = fields.reduce((s, f) => s + f.match_rate, 0) / (fields.length || 1);
+        const totalIter = fields.reduce((s, f) => s + (f.iterations || 1), 0);
+
+        document.getElementById('statFields').textContent = fields.length;
+        document.getElementById('statAvgRate').textContent = (avgRate * 100).toFixed(1) + '%';
+        document.getElementById('statPii').textContent = piiCount;
+        document.getElementById('statIter').textContent = totalIter;
+
+        fields.forEach(field => {
+            const rate = field.match_rate * 100;
+            const isPii = field.is_pii;
+            const textClass = "text-slate-800";
+            const barGradient = "bg-brandOrange";
+            
+            const piiHtml = isPii ? `<span class="ml-2 text-[10px] bg-pink-100 text-brandPink border border-pink-300 px-2 py-0.5 rounded-full font-mono uppercase tracking-widest font-bold">PII: ${field.pii_type}</span>` : '';
+
+            const card = document.createElement('div');
+            card.className = "space-y-2 mb-6";
+            card.innerHTML = `
+                <div class="flex justify-between items-end border-b border-slate-200 pb-1">
+                    <span class="font-mono text-sm text-slate-800 font-bold">${field.name}${piiHtml}</span>
+                    <span class="text-xs ${textClass} font-black">${rate.toFixed(1)}% match</span>
+                </div>
+                <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                    <div class="h-full ${barGradient} rounded-full" style="width: ${rate}%"></div>
+                </div>
+                <div class="flex justify-between items-center pt-1">
+                    <p class="text-[10px] text-slate-500 font-mono break-all pr-4 font-medium">Regex: <span class="text-brandPink">${escapeHtml(field.regex)}</span></p>
+                    <p class="text-[10px] text-slate-500 whitespace-nowrap font-bold">${field.matched}/${field.total} events</p>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function renderTA(ta) {
+        if (!ta) return;
+        document.getElementById('propsConf').innerHTML = highlightSyntax(ta.props_conf || '');
+        document.getElementById('transformsConf').innerHTML = highlightSyntax(ta.transforms_conf || '');
+        document.getElementById('dataModelJson').innerHTML = highlightSyntax(JSON.stringify(ta.data_model || {}, null, 2), true);
+    }
+
+    function switchTab(name, btnEl) {
+        document.querySelectorAll('.tab-btn').forEach(t => {
+            t.classList.remove('text-brandPink', 'border-b-2', 'border-brandPink', 'bg-white/80', 'font-bold');
+            t.classList.add('text-slate-500', 'font-semibold');
+        });
+        btnEl.classList.remove('text-slate-500', 'font-semibold');
+        btnEl.classList.add('text-brandPink', 'border-b-2', 'border-brandPink', 'bg-white/80', 'font-bold');
+
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(`tab-${name}`).classList.add('active');
+    }
+
+    function downloadTA() {
+        if (currentJobId) window.location.href = `${API}/generate-ta/${currentJobId}`;
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+.mltk-boxplot {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.mltk-boxplot-chart {
+    width: 100%;
+    height: 100%;
+}
+
+.mltk-boxplot-chart-with-warning {
+    height: calc(100% - 60px);
+}
+
+.mltk-boxplot-warning {
+    margin-top: 10px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.mltk-boxplot-warning > .alert {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.mltk-boxplot-warning > .alert > p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

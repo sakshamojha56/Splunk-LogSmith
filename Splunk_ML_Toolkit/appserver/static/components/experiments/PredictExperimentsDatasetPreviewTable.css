@@ -1,0 +1,97 @@
+/**
+ * Predict Numeric / Categorical Fields — SearchResultsTable typography for:
+ *   - Raw data preview: #datasetPreviewPanel .mltk-raw-data-preview-host
+ *   - Prediction results: #dataAndPredictionsPanel .mltk-predict-results-table-host (table)
+ *   - Same panel footer: React `.mltk-prediction-results-footer-react` + Backbone Schedule row
+ *
+ * Loaded from PredictNumericFields.jsx / PredictCategoricalFields.jsx (ExperimentShell does not apply
+ * DataPreviewArea styles when showDataPreview is false; panels live in AssistantPanel).
+ */
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table {
+    table-layout: auto;
+    width: 100%;
+}
+
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead {
+    background: #f2f4f5;
+}
+
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th,
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th button,
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th span,
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th div,
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th a,
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th [role='columnheader'] {
+    font-family: 'Splunk Platform Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+    max-width: none;
+    text-decoration: none !important;
+}
+
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th button:hover,
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th button:focus,
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th a:hover,
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table thead th a:focus {
+    text-decoration: none !important;
+}
+
+#datasetPreviewPanel .mlts-panel-body .mltk-raw-data-preview-host table tbody td {
+    font-family: 'Splunk Platform Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 400;
+    color: #333;
+    white-space: nowrap;
+}
+
+/* Prediction / testing apply output — match raw preview typography */
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table {
+    table-layout: auto;
+    width: 100%;
+}
+
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead {
+    background: #f2f4f5;
+}
+
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th,
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th button,
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th span,
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th div,
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th a,
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th [role='columnheader'] {
+    font-family: 'Splunk Platform Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+    max-width: none;
+    text-decoration: none !important;
+}
+
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th button:hover,
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th button:focus,
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th a:hover,
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table thead th a:focus {
+    text-decoration: none !important;
+}
+
+#dataAndPredictionsPanel .mlts-panel-body .mltk-predict-results-table-host table tbody td {
+    font-family: 'Splunk Platform Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 400;
+    color: #333;
+    white-space: nowrap;
+}
+
+/* Footer under results table: Backbone `AssistantPanel` root + React links + Schedule anchor (PCF + PNF). */
+#dataAndPredictionsPanel .mlts-panel-footer {
+    margin-top: 12px;
+    padding-top: 8px;
+}
+
+#dataAndPredictionsPanel .mltk-prediction-results-footer-react,
+#dataAndPredictionsPanel .mltk-prediction-results-chart-footer-actions {
+    display: inline-block;
+    vertical-align: middle;
+}
