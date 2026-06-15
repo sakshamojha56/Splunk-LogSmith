@@ -1,7 +1,6 @@
 # Splunk LogSmith: The Autonomous Regex Architect
 
-**LogSmith is an autonomous AI agent that leverages Gemini and Splunk's native REST APIs to instantly write, mathematically test, and package perfect regex extractions into ready-to-deploy Splunk Technology Add-ons.**
-
+**LogSmith is an autonomous AI agent that leverages configurable AI models and Splunk's native REST APIs to instantly generate, mathematically test, and package production-ready regex extractions into deployable Splunk Technology Add-ons.**
 ---
 
 ## 💡 Inspiration
